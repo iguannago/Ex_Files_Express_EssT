@@ -1,9 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var debug = require('debug')('sample:routes:users');
+var debugDb = require('debug')('sample:mongodb');
 var data = require('../data/data.json');
+const MongoClient = require('mongodb').MongoClient;
 
 router.get('/', (req, res) => {
+  MongoClient.connect(
+    'mongodb://admin:password@localhost:27017',
+    (err, client) => {
+      if (err) throw err;
+      debugDb('Connected successfully...');
+    }
+  );
   debug('get all users call ...');
   res.render('users', {
     title: 'Users',
