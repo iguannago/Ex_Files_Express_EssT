@@ -6,38 +6,89 @@ var data = require('../data/data.json');
 const MongoClient = require('mongodb').MongoClient;
 
 router.get('/', (req, res) => {
+  debug('get all users call ...');
+
   MongoClient.connect(
     'mongodb://admin:password@localhost:27017',
     (err, client) => {
       if (err) throw err;
+
       debugDb('Connected successfully...');
+      const db = client.db('user-account');
+      const result = db
+        .collection('users')
+        .find()
+        .toArray((err, result) => {
+          if (err) throw err;
+
+          debugDb(`users found are: ${JSON.stringify(result)}`);
+          client.close();
+          res.render('users', {
+            title: 'Users',
+            data: result,
+          });
+        });
     }
   );
-  debug('get all users call ...');
-  res.render('users', {
-    title: 'Users',
-    data: data,
-  });
 });
 
-router.get('/:id', (req, res) => {
-  debug(`get user(id=${req.params.id}) call ...`);
-  res.render('users', {
-    title: 'User',
-    data: data.find((e) => e.id == req.params.id),
-  });
+router.get('/:dni', (req, res) => {
+  debug(`get user(dni=${req.params.dni}) call ...`);
+
+  MongoClient.connect(
+    'mongodb://admin:password@localhost:27017',
+    (err, client) => {
+      if (err) throw err;
+
+      debugDb('Connected successfully...');
+      const db = client.db('user-account');
+      db.collection('users').findOne({ dni: req.params.dni }, (err, result) => {
+        if (err) throw err;
+
+        debugDb(
+          `user(dni=${req.params.dni}) found is: ${JSON.stringify(result)}`
+        );
+        client.close();
+
+        res.render('users', {
+          title: 'User',
+          data: result,
+        });
+      });
+    }
+  );
 });
 
 router.post('/', (req, res) => {
-  debug(`add user(id=${req.body.id}) call ...`);
-  newUser = {
-    id: req.body.id,
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    email: req.body.email,
-  };
-  data.push(newUser);
-  res.json(data[data.length - 1]);
+  debug(`add user(id=${req.body.dni}) call ...`);
+
+  MongoClient.connect(
+    'mongodb://admin:password@localhost:27017',
+    (err, client) => {
+      if (err) throw err;
+
+      debugDb('Connected successfully...');
+      const db = client.db('user-account');
+
+      db.collection('users').updateOne(
+        { dni: req.params.dni },
+        { $set: req.body },
+        { upsert: true },
+        (err, result) => {
+          if (err) throw err;
+
+          debugDb(
+            `user(id=${req.params.id}) updated or inserted: ${JSON.stringify(
+              result
+            )}`
+          );
+          client.close();
+
+          res.json(req.body);
+        }
+      );
+    }
+  );
 });
 
 module.exports = router;

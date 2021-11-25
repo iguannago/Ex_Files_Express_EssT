@@ -1,2 +1,6 @@
 <h1>{{title}}</h1>
-<pre>{{{json data}}}</pre>
+{{#if data}}
+  <pre>{{{json data}}}</pre>
+{{else}}
+  <p>User not found</p>
+{{/if}}
