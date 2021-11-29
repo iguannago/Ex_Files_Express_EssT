@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var debug = require('debug')('sample:routes:users');
-var debugDb = require('debug')('sample:mongodb');
+var debug = require('debug')('app:routes:users');
+var debugDb = require('debug')('users:mongodb');
 var data = require('../data/data.json');
 const MongoClient = require('mongodb').MongoClient;
 
