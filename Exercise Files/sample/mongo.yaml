@@ -20,6 +20,8 @@ services:
     depends_on:
       - mongodb
   my-sample-app:
-    image: my-sample-app:1.0
+    image: my-sample-app:2.0
+    environment:
+      - DEBUG:*
     ports:
       - 3000:3000
