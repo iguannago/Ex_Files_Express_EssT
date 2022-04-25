@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   debug('get all users call ...');
 
   MongoClient.connect(
-    'mongodb://admin:password@127.0.0.1:27017',
+    'mongodb://admin:password@localhost:27017',
     (err, client) => {
       if (err) throw err;
 
@@ -36,7 +36,7 @@ router.get('/:dni', (req, res) => {
   debug(`get user(dni=${req.params.dni}) call ...`);
 
   MongoClient.connect(
-    'mongodb://admin:password@127.0.0.1:27017',
+    'mongodb://admin:password@localhost:27017',
     (err, client) => {
       if (err) throw err;
 
@@ -63,7 +63,7 @@ router.post('/', (req, res) => {
   debug(`add user(id=${req.body.dni}) call ...`);
 
   MongoClient.connect(
-    'mongodb://admin:password@127.0.0.1:27017',
+    'mongodb://admin:password@localhost:27017',
     (err, client) => {
       if (err) throw err;
 
